@@ -6,81 +6,6 @@ const connectDB = require("../utility/connectDb");
 
 
 
-const resources = [
-  {
-    id: "1",
-    header: "GSS Textbooks Photocopy for Free",
-    description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa consequatur adipisci fuga nisi, eos obcaecati vitae incidunt cupiditate ea consequuntur eum doloremque modi, tempore officia! Voluptatum aperiam rem consectetur sequi?",
-    thumbnail: "/IMG_0528.JPG",
-    views: 20,
-    state:"calabar",
-    landmark:"landmark",
-    adress:"blam blam blam ",
-    gallery:[{
-      src:"/IMG_0528.JPG",
-      alt : " image"
-      }]
-  },
-  {
-    id: "1",
-    header: "GSS Textbooks Photocopy for Free",
-    description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa consequatur adipisci fuga nisi, eos obcaecati vitae incidunt cupiditate ea consequuntur eum doloremque modi, tempore officia! Voluptatum aperiam rem consectetur sequi?",
-    thumbnail: "/IMG_0528.JPG",
-    views: 20,
-    state:"calabar",
-    landmark:"landmark",
-    adress:"blam blam blam ",
-    gallery:[{
-      src:"/IMG_0528.JPG",
-      alt : " image"
-      }]
-  },
-  {
-    id: "1",
-    header: "GSS Textbooks Photocopy for Free",
-    description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa consequatur adipisci fuga nisi, eos obcaecati vitae incidunt cupiditate ea consequuntur eum doloremque modi, tempore officia! Voluptatum aperiam rem consectetur sequi?",
-    thumbnail: "/IMG_0528.JPG",
-    views: 20,
-    state:"calabar",
-    landmark:"landmark",
-    adress:"blam blam blam ",
-    gallery:[{
-      src:"/IMG_0528.JPG",
-      alt : " image"
-      }]
-  },
-  {
-    id: "1",
-    header: "GSS Textbooks Photocopy for Free",
-    description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa consequatur adipisci fuga nisi, eos obcaecati vitae incidunt cupiditate ea consequuntur eum doloremque modi, tempore officia! Voluptatum aperiam rem consectetur sequi?",
-    thumbnail: "/IMG_0528.JPG",
-    views: 20,
-    state:"calabar",
-    landmark:"landmark",
-    adress:"blam blam blam ",
-    gallery:[""]
-  },
-  {
-    id: "1",
-    header: "GSS Textbooks Photocopy for Free",
-    description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa consequatur adipisci fuga nisi, eos obcaecati vitae incidunt cupiditate ea consequuntur eum doloremque modi, tempore officia! Voluptatum aperiam rem consectetur sequi?",
-    thumbnail: "/IMG_0528.JPG",
-    views: 20,
-    state:"calabar",
-    landmark:"landmark",
-    adress:"blam blam blam ",
-    gallery:[{
-      src:"/IMG_0528.JPG",
-      alt : " image"
-      }]
-  },
-];
-
 
 router.get("/resources", async (req, res) => {
   const { keyword, type } = req.query; 
@@ -100,7 +25,7 @@ router.get("/resources", async (req, res) => {
     }
 
     // Fetch data from the database based on the query
-    const data = resources;
+    const data = await resources.find(query)
     res.json(data);
   } catch (error) {
     
