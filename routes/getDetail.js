@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const Resource = require("../modules/resource");
 const mongoose = require("mongoose");
-
+const connectDB = require("../utility/connectDb");
 // API to Get a Single Resource by ID
 
 router.get("/details/:id",
    async (req,
    res) => {
   const { id } = req.params;
+  connectDB()
   if (!mongoose.Types.ObjectId.isValid(id)) {
     console.log(id);
     return res.status(400).json({ error: "Invalid ID format" });
