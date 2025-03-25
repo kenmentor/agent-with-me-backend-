@@ -1,7 +1,7 @@
 const {crudRepositoryExtra} = require("../repositories")
 const {resourceDB}= require("../modules")
 const { v2: cloudinary } = require("cloudinary");
-const connectDB = require("../../utility/connectDb");
+const {connectDB } =  require("../utility");
 require('dotenv').config();
 
 
