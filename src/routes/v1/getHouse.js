@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {get_house_controller } =require("../../controllers")
-router.get("/", get_house_controller);
+const {house_controller} = require("../../controllers")
+router.get("/", house_controller.get_house);
 
 module.exports = router;

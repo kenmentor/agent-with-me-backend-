@@ -8,7 +8,18 @@ class crudRepositoryExtra {
         
     }
    
+    async updateAny(object){
+      try{
 
+     
+      const verifiedUser = await this.module.findOneUpdate(object)
+      return verifiedUser
+      }
+      catch (error) {
+        console.error("Error fetching data from DB:", error);
+        
+      }
+    }
     async  find(type,keyword){
        
     
@@ -86,8 +97,8 @@ class crudRepositoryExtra {
             async  create (object){
               try{
 
-                const newmodule = new module(object);
-                  const resource = await this.module.save();
+                const newmodule = new this.module(object);
+                  const resource = await newmodule.save();
                   return resource ;
               }catch(err){
                 console.log("error while creating data -crud")
