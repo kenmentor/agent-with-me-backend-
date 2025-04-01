@@ -10,6 +10,7 @@ const newcrudRepositoryExtra = new crudRepositoryExtra(resourceDB);
 async function find_house(type, keyword,min,max,category,type,location,limit,bardge) {
   await connectDB();
   return newcrudRepositoryExtra.filter(type, keyword,min,max,category,location,limit,bardge);
+  console.log("working")
 }
 
 async function get_all_houses() {
