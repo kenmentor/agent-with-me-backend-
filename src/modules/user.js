@@ -57,4 +57,4 @@ const User = mongoose.model("User", userSchema);
 // Call the function
 
 
-module.exports = { User }; // Exporting the model for reuse
+module.exports = mongoose.model("user",User)

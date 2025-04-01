@@ -17,5 +17,5 @@ const resourceSchema = new mongoose.Schema({
 });
 
 // Add indexes for fast queries
-resourceSchema.index({ header: "text", description: "text" ,location : "text"}); // Full-text search
+resourceSchema.index({ landmark:"text",type:"text",address:"text",title: "text", description: "text" ,location : "text"}); // Full-text search
 module.exports = mongoose.model("Resource", resourceSchema);

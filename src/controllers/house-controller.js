@@ -1,16 +1,19 @@
 const { house_service } = require("../service");
+const {response} = require("../utility")
 
 const get_house_detail = async (req, res) => {
   try {
-    const { id } = req.params; // ✅ Get ID correctly
-    console.log("Extracted ID:",  req.params);
-
+    const { id } = req.params; 
     if (!id) {
-      return res.status(400).json({ error: "ID is required" });
+      const responseData = response.badResponse
+      responseData.message = "ID required"
+      return res.json(responseData).status(200);
     }
 
     const data = await house_service.get_house_details(id); // ✅ Pass correct ID
-    res.json(data); // ✅ Send the data to client
+    const responseData = response.goodResponse
+        responseData.data = data
+        res.json(responseData).status(200) 
   } catch (error) {
     console.error("Error fetching resource:", error);
     res.status(500).json({ error: "Failed to fetch resource" }); // ✅ Send error response
@@ -21,27 +24,28 @@ const get_house_detail = async (req, res) => {
 
 
 async function get_house (req, res) {
-    const { keyword, type } = req.query;
+    const { type, keyword,min,max,category,location,limit,bardge} = req.query;
     console.log(req.query);
     
     
     try{
-        if(keyword||type ){
-            const data = await house_service.find_house(keyword, type)
-            return res.status(200).json(data)
+      
+            const data = await house_service.find_house(type, keyword,min,max,category,location,limit,bardge)
+            const responseData = response.goodResponse
+            responseData.data = data
+            return res.json(responseData).status(200)
             
-       }
+       
       
 
       
-        const data = await house_service.get_all_houses()
-        res.status(200).json(data)
        
     
     }
     catch (error) {
+      const responseData = response.badResponse
       console.error("Error fetching data from DB:", error);
-      res.status(500).json({ error: "Internal server error" });
+      res.status(500).json(responseData)
     }
 }
 
@@ -49,10 +53,13 @@ async function update_house_view(res,req){
     const id = await req.body.id
 try{
     const data = await house_service.update_house_view(id)
-    res.json(data)
+    const responseData = response.goodResponse
+    responseData.data = data
+    res.json(responseData)
 }
 catch(erro){
-    res.json({erro:"server erro "})
+  const responseData = response.badResponse
+  res.json(responseData)
 console.log("erro happen while updating view ")
 throw erro
 }
@@ -64,6 +71,8 @@ async function upload_house(res,req){
    console.log("files",files)
    console.log("body",body)
    const data = house_service.upload_house(files, body )
+   const responseData = response.goodResponse
+    res.json(responseData)
   
 }
 

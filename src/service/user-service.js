@@ -8,10 +8,7 @@ const newcrudRepositoryExtra =new crudRepositoryExtra(userDB)
 const saltround = 10
 
 
-
 async function verify (param){
-    
-        
         const jwt_api_key = process.env.JWT_API_KEY 
         const verifiedUser = await newcrudRepositoryExtra.updateAny({verifyToken:param},{$set:{isverified:True}})
         const jwtToken =  await jwt.sign({

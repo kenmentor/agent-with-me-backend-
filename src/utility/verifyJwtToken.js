@@ -16,3 +16,6 @@ function verifyJwtToken (req,res){
 
 
 }
+module.exports = {
+    verifyJwtToken
+}

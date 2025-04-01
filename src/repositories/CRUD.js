@@ -105,5 +105,49 @@ class crudRepositoryExtra {
                 throw err 
                   }
             }
+            async filter (filter){
+
+              function queryBuilder(filter){
+              let query = {}
+              if(filter.keyword) query.title = new RegExp(filter.keyword,"i")
+              if(filter.keyword) query.description = new RegExp(filter.keyword,"i")
+              if(filter.min) query.price = {$gte:filter.min}
+              if(filter.max) query.price = {...filter.price,$lte:filter.max}
+              if(filter.category) query.category = new RegExp(filter.category,"i")
+              if(filter.type) query.type = new RegExp(filter.type,"i")
+              if(filter.location) query.location = new RegExp(filter.location,"i")
+              return query
+            }
+            this.module.find(queryBuilder(filter))
+            .limit(filter.limit)
+            .skip((filter.limit*filter.bardge)-1)
+            .exec((err,house)=>{
+              return house
+            })
+          }
+          async losefilter (filter){
+
+            function queryBuilder(filter){
+            let query = { $or:[
+
+            ]}
+
+            if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
+            if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
+            if(filter.min) query.$or.push( {$gte:filter.min})
+            if(filter.max) query.$or.push(  {...filter.price,$lte:filter.max})
+            if(filter.category) query.$or.push({new RegExp(filter.category,"i")})
+            if(filter.type) query.$or.push({ new RegExp(filter.type,"i")})
+            if(filter.location) query.$or.push({ new RegExp(filter.location,"i")})
+            return query
+          }
+          this.module.find(queryBuilder(filter))
+          .limit(filter.limit)
+          .skip((filter.limit*filter.bardge)-1)
+          .exec((err,house)=>{
+            return house
+          })
+        }
+          
 }
 module.exports = crudRepositoryExtra
