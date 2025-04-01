@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const fuzzysort = require('fuzzysort');
 class crudRepositoryExtra {
     constructor(module){
         this.module = module;
@@ -105,26 +106,53 @@ class crudRepositoryExtra {
                 throw err 
                   }
             }
-            async filter (filter){
+            
 
-              function queryBuilder(filter){
-              let query = {}
-              if(filter.keyword) query.title = new RegExp(filter.keyword,"i")
-              if(filter.keyword) query.description = new RegExp(filter.keyword,"i")
-              if(filter.min) query.price = {$gte:filter.min}
-              if(filter.max) query.price = {...filter.price,$lte:filter.max}
-              if(filter.category) query.category = new RegExp(filter.category,"i")
-              if(filter.type) query.type = new RegExp(filter.type,"i")
-              if(filter.location) query.location = new RegExp(filter.location,"i")
-              return query
+            async filter(filter) {
+              try {
+                const query = {};
+                const keyword = filter.keyword?.trim();
+                const limit = filter.limit || 10;
+                const page = filter.page || 1;
+                const skip = (page - 1) * limit;
+            
+                // 🧠 MongoDB Filtering (First Stage)
+                if (filter.category) query.category = new RegExp(filter.category, "i");
+                if (filter.type) query.type = new RegExp(filter.type, "i");
+                if (filter.location) query.location = new RegExp(filter.location, "i");
+                if (filter.min || filter.max) query.price = {};
+                if (filter.min) query.price.$gte = filter.min;
+                if (filter.max) query.price.$lte = filter.max;
+            
+                let data = await this.module.find(query).sort({ createdAt: -1 }).lean();
+            
+                // 🏆 AI-Like Smart Search (Second Stage)
+                if (keyword) {
+                  data = fuzzysort.go(keyword, data, { 
+                    keys: ['title', 'description', 'category', 'type', 'location'],
+                    threshold: -10000 
+                  }).map(result => result.obj);
+                }
+            
+                // 📌 Pagination Handling
+                const totalResults = data.length;
+                const finalResults = data.slice(skip, skip + limit);
+            
+                // 🎯 Smart Suggestions If Results Are Too Few
+                let suggestions = [];
+                if (finalResults.length < limit) {
+                  suggestions = data.slice(0, 5); // Take top 5 suggestions
+                }
+            
+                return  finalResults
+                 
+              } catch (error) {
+                console.error("Error filtering data:", error);
+                throw new Error("Filtering failed");
+              }
             }
-            this.module.find(queryBuilder(filter))
-            .limit(filter.limit)
-            .skip((filter.limit*filter.bardge)-1)
-            .exec((err,house)=>{
-              return house
-            })
-          }
+            
+            
           async losefilter (filter){
 
             function queryBuilder(filter){

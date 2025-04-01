@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "build":" mkdir -p dist && cp -r scr/* dist/"
+    "build": " mkdir -p dist && cp -r scr/* dist/"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
     "file-saver": "^2.0.5",
+    "fuzzysort": "^3.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3",
     "morgan": "^1.10.0",
