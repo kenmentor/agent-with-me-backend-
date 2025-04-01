@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const feedback = new mongoose.Schema({
-  feedback:{type:string}
+  feedback:{type:String}
 });
 
 // Add indexes for fast queries

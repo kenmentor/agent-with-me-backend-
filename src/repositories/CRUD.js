@@ -132,14 +132,14 @@ class crudRepositoryExtra {
 
             ]}
 
-            if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
-            if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
-            if(filter.min) query.$or.push( {$gte:filter.min})
-            if(filter.max) query.$or.push(  {...filter.price,$lte:filter.max})
-            if(filter.category) query.$or.push({new RegExp(filter.category,"i")})
-            if(filter.type) query.$or.push({ new RegExp(filter.type,"i")})
-            if(filter.location) query.$or.push({ new RegExp(filter.location,"i")})
-            return query
+            // if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
+            // if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
+            // if(filter.min) query.$or.push( {$gte:filter.min})
+            // if(filter.max) query.$or.push(  {...filter.price,$lte:filter.max})
+            // if(filter.category) query.$or.push({new RegExp(filter.category,"i")})
+            // if(filter.type) query.$or.push({ new RegExp(filter.type,"i")})
+            // if(filter.location) query.$or.push({ new RegExp(filter.location,"i")})
+            // return query
           }
           this.module.find(queryBuilder(filter))
           .limit(filter.limit)
