@@ -86,10 +86,10 @@ class crudRepositoryExtra {
           throw new Error("Resource not found");
         }
     
-        return data; // ✅ Return actual data from DB
+        return data; 
       } catch (error) {
         console.error("Error fetching resource:", error);
-        throw new Error("Failed to fetch resource"); // ✅ Rethrow for better error handling
+        throw new Error("Failed to fetch resource"); 
       }
     }
     
@@ -116,9 +116,10 @@ class crudRepositoryExtra {
                 query.$or = [
                     { title: regex },
                     { description: regex },
-                    { category: regex },
                     { type: regex },
-                    { location: regex }
+                    { location: regex },
+                    { category: regex },
+                    
                 ];
             }
             if (filter.min) query.price = { $gte: filter.min };
@@ -129,10 +130,13 @@ class crudRepositoryExtra {
                 .skip((filter.limit * (filter.page || 1)) - filter.limit)
                 .sort({ createdAt: -1 });
         } catch (error) {
-            console.error("Error filtering data:", error);
+          console.error("Error filtering data:", error);
+          throw error
+            
         }
     }
-}
+
+
             
             
           async losefilter (filter){
@@ -142,14 +146,7 @@ class crudRepositoryExtra {
 
             ]}
 
-            // if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
-            // if(filter.keyword) query.$or.push({new RegExp(filter.keyword,"i")})
-            // if(filter.min) query.$or.push( {$gte:filter.min})
-            // if(filter.max) query.$or.push(  {...filter.price,$lte:filter.max})
-            // if(filter.category) query.$or.push({new RegExp(filter.category,"i")})
-            // if(filter.type) query.$or.push({ new RegExp(filter.type,"i")})
-            // if(filter.location) query.$or.push({ new RegExp(filter.location,"i")})
-            // return query
+          
           }
           this.module.find(queryBuilder(filter))
           .limit(filter.limit)
