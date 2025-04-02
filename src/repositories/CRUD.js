@@ -109,48 +109,30 @@ class crudRepositoryExtra {
             
 
             async filter(filter) {
-              try {
-                const query = {};
-                const keyword = filter.keyword?.trim();
-                const limit = filter.limit || 10;
-                const page = filter.page || 1;
-                const skip = (page - 1) * limit;
-            
-                // 🧠 MongoDB Filtering (First Stage)
-                if (filter.category) query.category = new RegExp(filter.category, "i");
-                if (filter.type) query.type = new RegExp(filter.type, "i");
-                if (filter.location) query.location = new RegExp(filter.location, "i");
-                if (filter.min || filter.max) query.price = {};
-                if (filter.min) query.price.$gte = filter.min;
-                if (filter.max) query.price.$lte = filter.max;
-            
-                let data = await this.module.find(query).sort({ createdAt: -1 }).lean();
-            
-                // 🏆 AI-Like Smart Search (Second Stage)
-                if (keyword) {
-                  data = fuzzysort.go(keyword, data, { 
-                    keys: ['title', 'description', 'category', 'type', 'location'],
-                    threshold: -10000 
-                  }).map(result => result.obj);
-                }
-            
-                // 📌 Pagination Handling
-                const totalResults = data.length;
-                const finalResults = data.slice(skip, skip + limit);
-            
-                // 🎯 Smart Suggestions If Results Are Too Few
-                let suggestions = [];
-                if (finalResults.length < limit) {
-                  suggestions = data.slice(0, 5); // Take top 5 suggestions
-                }
-            
-                return  finalResults
-                 
-              } catch (error) {
-                console.error("Error filtering data:", error);
-                throw new Error("Filtering failed");
-              }
+        try {
+            let query = {};
+            if (filter.keyword) {
+                const regex = new RegExp(filter.keyword, "i");
+                query.$or = [
+                    { title: regex },
+                    { description: regex },
+                    { category: regex },
+                    { type: regex },
+                    { location: regex }
+                ];
             }
+            if (filter.min) query.price = { $gte: filter.min };
+            if (filter.max) query.price = { ...query.price, $lte: filter.max };
+
+            return await this.module.find(query)
+                .limit(filter.limit)
+                .skip((filter.limit * (filter.page || 1)) - filter.limit)
+                .sort({ createdAt: -1 });
+        } catch (error) {
+            console.error("Error filtering data:", error);
+        }
+    }
+}
             
             
           async losefilter (filter){
