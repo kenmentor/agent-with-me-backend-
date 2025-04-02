@@ -13,9 +13,9 @@ async function find_house(type, keyword,min,max,category,type,location,limit,bar
   console.log("working")
 }
 
-async function get_all_houses() {
+async function get_details(id){
   await connectDB();
-  return newcrudRepositoryExtra.findAll();
+  return newcrudRepositoryExtra.getDetail(id);
 }
 
 async function update_house_view(id) {
@@ -101,5 +101,5 @@ module.exports = {
   find_house,
   update_house_view,
   upload_house,
-  get_all_houses,
+ get_details
 };

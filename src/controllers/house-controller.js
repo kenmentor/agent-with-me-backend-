@@ -9,8 +9,8 @@ const get_house_detail = async (req, res) => {
       responseData.message = "ID required"
       return res.json(responseData).status(200);
     }
-
-    const data = await house_service.get_house_details(id); // ✅ Pass correct ID
+console.log(id,"this id jbfyfyuf by")
+    const data = await house_service.get_details(id); // ✅ Pass correct ID
     const responseData = response.goodResponse
         responseData.data = data
         res.json(responseData).status(200) 
