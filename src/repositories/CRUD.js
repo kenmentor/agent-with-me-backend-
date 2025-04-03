@@ -112,22 +112,16 @@ class crudRepositoryExtra {
         try {
             let query = {};
             if (filter.keyword) {
-                const regex = new RegExp(filter.keyword, "i");
-                query.$or = [
-                    { title: regex },
-                    { description: regex },
-                    { type: regex },
-                    { location: regex },
-                    { category: regex },
-                    
-                ];
+                const regex = new RegExp(filter.location, "i");
+                query.location = regex
             }
+            
             if (filter.min) query.price = { $gte: filter.min };
             if (filter.max) query.price = { ...query.price, $lte: filter.max };
 
             return await this.module.find(query)
                 .limit(filter.limit)
-                .skip((filter.limit * (filter.page || 1)) - filter.limit)
+                .skip((filter.limit * (filter.bardge || 1)) - filter.limit)
                 .sort({ createdAt: -1 });
         } catch (error) {
           console.error("Error filtering data:", error);

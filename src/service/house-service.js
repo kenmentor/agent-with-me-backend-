@@ -7,9 +7,9 @@ require("dotenv").config();
 
 const newcrudRepositoryExtra = new crudRepositoryExtra(resourceDB);
 
-async function find_house(type, keyword,min,max,category,type,location,limit,bardge) {
+async function find_house(type,min,max,category,type,location,limit,bardge) {
   await connectDB();
-  return newcrudRepositoryExtra.filter({type, keyword,min,max,category,location,limit,bardge});
+  return newcrudRepositoryExtra.filter({type,min,max,category,location,limit,bardge});
   console.log("working")
 }
 
