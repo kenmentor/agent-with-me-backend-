@@ -2,12 +2,11 @@ const {feedback_service} = require("../service")
 const {response} = require("../utility")
 
 async function create_feedback(req,res){
-    try{
-
+try {
     
-    const {feeback} = await req.body
+    const {feedback} = await req.body
     feedback_service.create_feedback(feedback) 
-    res.json(response.goodResponse)
+    res.json(response.goodResponse.message = "thanks for your feedback")
 }catch(err){
    
     res.json(response.badResponse)

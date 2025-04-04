@@ -112,8 +112,13 @@ class crudRepositoryExtra {
         try {
             let query = {};
             if (filter.keyword) {
-                const regex = new RegExp(filter.location, "i");
-                query.location = regex
+                const regexLocation = new RegExp(filter.location, "i");
+                const regexType = new RegExp(filter.type, "i");
+                const regexCategory = new RegExp(filter.category, "i");
+
+                query.location = regexLocation
+                query.type = regexType
+                query.category = regexCategory
             }
             
             if (filter.min) query.price = { $gte: filter.min };

@@ -30,7 +30,7 @@ async function get_house (req, res) {
     
     try{
       
-            const data = await house_service.find_house(type,parseInt(min),parseInt(max),category,location,parseInt(limit),parseInt(bardge))
+            const data = await house_service.find_house(type,parseInt(min),parseInt(max),category,decodeURIComponent(location),parseInt(limit),parseInt(bardge))
             const responseData = response.goodResponse
             responseData.data = data
             return res.json(responseData).status(200)

@@ -5,17 +5,18 @@ const resourceSchema = new mongoose.Schema({
   description: { type: String, required: true },
   state : { type: String, required: true },
   address : { type: String, required: true },
-  landmark : { type: String, required: true },
+  location : { type: String, required: true },
   type:{ type: String, required: true },
   views: {
     default: 0,
     type: Number,
   },
+  category:{ type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   thumbnail:String,
   gallery:[]
 });
 
 // Add indexes for fast queries
-resourceSchema.index({ landmark:"text",type:"text",address:"text",title: "text", description: "text" ,location : "text"}); // Full-text search
+resourceSchema.index({ location:"text",type:"text",category:"text"}); // Full-text search
 module.exports = mongoose.model("Resource", resourceSchema);
