@@ -112,13 +112,10 @@ class crudRepositoryExtra {
               try {
                   let query = {};
           
-                  // Apply keyword search if it exists
-                  
-                      if (filter.location) query.location = new RegExp(filter.location, "i");
-                      if (filter.type) query.type = new RegExp(filter.type, "i");
-                      if (filter.category) query.category = new RegExp(filter.category, "i");
-                  
-          
+                  // Apply keyword search if it exists 
+                  if (filter.location) query.location = new RegExp(filter.location, "i");
+                  if (filter.type) query.type = new RegExp(filter.type, "i");
+                  if (filter.category) query.category = new RegExp(filter.category, "i");
                   // Apply price filtering
                   if (filter.min !== undefined) query.price = { $gte: filter.min };
                   if (filter.max !== undefined) query.price = { ...query.price, $lte: filter.max };
@@ -129,7 +126,7 @@ class crudRepositoryExtra {
           
                   return await this.module.find(query)
                       .limit(limit)
-                      // .skip((page - 1) * limit)
+                      .skip((page - 1) * limit)
                       .sort({ createdAt: -1 });
           
               } catch (error) {
