@@ -108,32 +108,50 @@ class crudRepositoryExtra {
             }
             
 
-            async filter(filter) {
-              try {
-                  let query = {};
-          
-                  // Apply keyword search if it exists 
-                  if (filter.location) query.location = new RegExp(filter.location, "i");
-                  if (filter.type) query.type = new RegExp(filter.type, "i");
-                  if (filter.category) query.category = new RegExp(filter.category, "i");
-                  // Apply price filtering
-                  if (filter.min !== undefined) query.price = { $gte: filter.min };
-                  if (filter.max !== undefined) query.price = { ...query.price, $lte: filter.max };
-          
-                  // Default values for pagination
-                  const limit = filter.limit || 50; // Default limit if not provided
-                  const page = filter.bardge || 1;    // Default page number
-          
-                  return await this.module.find(query)
-                      .limit(limit)
-                      .skip((page - 1) * limit)
-                      .sort({ createdAt: -1 });
-          
-              } catch (error) {
-                  console.error("Error filtering data:", error);
-                  throw error;
-              }
-          }
+  async filter(filter) {
+  try {
+    let query = {};
+
+    // Keyword filters
+    if (filter.location && filter.location !== "undefined")
+      query.location = new RegExp(filter.location, "i");
+
+    if (filter.type && filter.type !== "undefined")
+      query.type = new RegExp(filter.type, "i");
+
+    if (filter.category && filter.category !== "undefined")
+      query.category = new RegExp(filter.category, "i");
+
+    // Price filter
+    const min = Number(filter.min);
+    const max = Number(filter.max);
+
+    if (!isNaN(min) || !isNaN(max)) {
+      query.price = {};
+      if (!isNaN(min)) query.price.$gte = min;
+      if (!isNaN(max)) query.price.$lte = max;
+    }
+
+    // Pagination
+    const limit = Number(filter.limit) || 50;
+    const page = Number(filter.bardge) || 1;
+    const skip = (page - 1) * limit;
+
+    console.log("Final query:", query); // Debug ✅
+
+    return await this.module
+      .find(query)
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: -1 });
+
+  } catch (error) {
+    console.error("Error filtering data:", error);
+    throw error;
+  }
+}
+
+
           
 
 
