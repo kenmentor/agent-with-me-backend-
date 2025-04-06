@@ -121,8 +121,8 @@ class crudRepositoryExtra {
 
     if (filter.category && filter.category !== "undefined")
       query.category = new RegExp(filter.category, "i");
-    if(query.id)
-      query._id = {$ne:mongoose.Types.ObjectId(query.id)};
+    if(query.id&& filter.id !== "undefined")
+      query._id = {$ne:mongoose.Types.ObjectId(filter.id)};
     // Price filter
     const min = Number(filter.min);
     const max = Number(filter.max);
