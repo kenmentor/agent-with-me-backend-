@@ -121,7 +121,8 @@ class crudRepositoryExtra {
 
     if (filter.category && filter.category !== "undefined")
       query.category = new RegExp(filter.category, "i");
-
+    if(query.id)
+      query.id = {$ne:query.id};
     // Price filter
     const min = Number(filter.min);
     const max = Number(filter.max);

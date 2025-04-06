@@ -24,23 +24,18 @@ console.log(id,"this id jbfyfyuf by")
 
 
 async function get_house (req, res) {
-    const { type,min,max,category,location,limit,bardge} = req.query;
+    const { type,min,max,category,location,limit,bardge,id} = req.query;
     console.log(req.query);
     
     
     try{
       
-            const data = await house_service.find_house(type,parseInt(min),parseInt(max),category,decodeURIComponent(location),parseInt(limit),parseInt(bardge))
+            const data = await house_service.find_house({type:type,min:parseInt(min),max:parseInt(max),category,location:decodeURIComponent(location),limit:parseInt(limit),bardge:parseInt(bardge),id:id})
             const responseData = response.goodResponse
             responseData.data = data
             return res.json(responseData).status(200)
             
-       
       
-
-      
-       
-    
     }
     catch (error) {
       const responseData = response.badResponse
