@@ -61,13 +61,18 @@ throw erro
 }
 
 
-async function upload_house(res,req){
-   const { files, body } = res;
+async function upload_house(req,res){
+  try{
+
+   const { files, body } = req;
    console.log("files",files)
    console.log("body",body)
    const data = house_service.upload_house(files, body )
    const responseData = response.goodResponse
     res.json(responseData)
+  }catch(err){
+    throw err
+  }
   
 }
 
