@@ -21,7 +21,7 @@ async function get_details(id){
 async function update_house_view(id) {
   try {
     const data = await newcrudRepositoryExtra.update(id);
-    return { views: data.view };
+    return { views: data };
   } catch (err) {
     console.error("Error while updating house view:", err);
     throw err;
