@@ -17,15 +17,10 @@ route.use("/details/",getHouseDetail_route)
 route.use("/upload/",upload_route)
 route.use("/updateview",updataView_route)
 route.use("/signup",signup_route)
+route.use("/login",login_route)
 route.use("/getfeedback",get_feeback_route)
 route.use("/postfeedback",post_feedback_route)
 route.use("verify",verify_route)
-// route.use("/login",login_route)
-
-
-// route.use("/upload",upload_route)
-// route.use("/verify",verify_route)
-
 
 module.exports = route
     

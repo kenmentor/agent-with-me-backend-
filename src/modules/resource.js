@@ -5,6 +5,9 @@ const resourceSchema = new mongoose.Schema({
   description: { type: String, required: true },
   state : { type: String, required: true },
   address : { type: String, required: true },
+  price : { type: Number, required: true },
+  waterSuply : { type: Boolean, required: true },
+  electricity : { type: Number, required: true },
   location : { type: String, required: true },
   type:{ type: String, required: true },
   views: {

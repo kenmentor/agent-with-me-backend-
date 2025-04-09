@@ -44,7 +44,7 @@ async function get_house (req, res) {
     }
 }
 
-async function update_house_view(res,req){
+async function update_house_view(req,res){
     const id = await req.body.id
 try{
     const data = await house_service.update_house_view(id)

@@ -72,11 +72,11 @@ async function upload_house(files, body) {
     }
 
     // Upload Other Files
-    let resources = [];
+    let gallery = [];
     if (files.files && files.files.length > 0) {
-      resources = await Promise.all(
+      gallery = await Promise.all(
         files.files.map((file) =>
-          uploadBufferToCloudinary(file.buffer, "resources").then((result) => ({
+          uploadBufferToCloudinary(file.buffer, "gallery").then((result) => ({
             url: result.secure_url,
             type: file.mimetype,
           }))
@@ -86,10 +86,15 @@ async function upload_house(files, body) {
 
     // 🔴 **Fix: Attach `thumbnailUrl` to `body`**
     body.thumbnail = thumbnailUrl;
-    body.resources = resources; // Also save resources in MongoDB
+    body.gallery = gallery; // Also save resources in MongoDB
 
     const newcrudRepositoryExtra = new crudRepositoryExtra(resourceDB);
-    const data = await newcrudRepositoryExtra.create(body); // Fix: Add await
+    const newBody = await body
+    newBody.electricity = await Number(body.electricity)
+    newBody.price = await Number(body.price)
+    newBody.waterSuply = await Boolean(body.waterSuply)
+
+    const data = await newcrudRepositoryExtra.create(newBody); // Fix: Add await
     return data;
   } catch (error) {
     console.error("Error handling upload:", error);
