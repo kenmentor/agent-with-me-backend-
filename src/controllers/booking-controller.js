@@ -9,6 +9,7 @@ async function get_booking_details(req, res) {
     res.json(Response);
   }
   try {
+    console.log("hello ");
     const Response = response.goodResponse;
     const id = "";
     const data = await booking_service.get_booking_details(id);
