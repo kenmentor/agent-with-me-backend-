@@ -1,26 +1,33 @@
 const { resourceDB } = require("../modules");
-const { crudRepositoryExtra } = require("../repositories");
+const { house_repository } = require("../repositories");
 const { connectDB } = require("../utility");
 const { v2: cloudinary } = require("cloudinary");
 
 require("dotenv").config();
 
-const newcrudRepositoryExtra = new crudRepositoryExtra(resourceDB);
+const newcrudRepositoryExtra = new house_repository(resourceDB);
 
 async function find_house(object) {
   await connectDB();
   return newcrudRepositoryExtra.filter(object);
-  
 }
 
-async function get_details(id){
+async function update_house(object) {
+  return newnewcrudRepositoryExtra.update(object);
+}
+
+async function get_details(id) {
   await connectDB();
   return newcrudRepositoryExtra.getDetail(id);
 }
 
 async function update_house_view(id) {
   try {
-    const data = await newcrudRepositoryExtra.update(id);
+    const data = await newcrudRepositoryExtra.update(
+      id,
+      { $inc: { view: 1 } },
+      { new: true }
+    );
     return { views: data };
   } catch (err) {
     console.error("Error while updating house view:", err);
@@ -28,7 +35,7 @@ async function update_house_view(id) {
   }
 }
 
-async function upload_house(files, body) {
+async function upload_house(files, body, user) {
   console.log("Cloudinary Config:", {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -89,11 +96,10 @@ async function upload_house(files, body) {
     body.gallery = gallery; // Also save resources in MongoDB
 
     const newcrudRepositoryExtra = new crudRepositoryExtra(resourceDB);
-    const newBody = await body
-    newBody.electricity = await Number(body.electricity)
-    newBody.price = await Number(body.price)
-    newBody.waterSuply = await Boolean(body.waterSuply)
-
+    const newBody = await body;
+    newBody.electricity = await Number(body.electricity);
+    newBody.price = await Number(body.price);
+    newBody.waterSuply = await Boolean(body.waterSuply);
     const data = await newcrudRepositoryExtra.create(newBody); // Fix: Add await
     return data;
   } catch (error) {
@@ -106,5 +112,6 @@ module.exports = {
   find_house,
   update_house_view,
   upload_house,
- get_details
+  get_details,
+  update_house,
 };

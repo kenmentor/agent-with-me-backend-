@@ -1,26 +1,28 @@
-const express =require("express")
-const route = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const getHouse_route =  require("./getHouse")
-const login_route =  require("./login")
-const getHouseDetail_route =  require("./getDetail")
-const signup_route =  require("./signup")
-const upload_route =  require("./upload")
-const updataView_route =  require("./updateView")
-const verify_route =  require("./verify")
-const get_feeback_route = require("./getFeedback")
-const post_feedback_route = require("./postFeedback")
+const admin_pannel_route = require("./admin-panel-route");
+const user_pannel_route = require("./user-panel-route");
+const complete_verification_route = require("./complete-verification");
+const house_route = require("./house-route");
+const payment_route = require("./payment-route");
+const auth_route = require("./authentication-route");
+const feedback_route = require("./feedback-route");
+const booking_route = require("./booking-route");
 
+router.use("/house", house_route);
+console.log("done 1");
+router.use("/auth", auth_route);
+console.log("done 2");
+router.use("/feedback", feedback_route);
+console.log("done 3");
+router.use("/verification", complete_verification_route);
+console.log("done 4");
+// route.use("/user-pannel", user_pannel_route);
+// router.use("/admin-pannel", admin_pannel_route);
+console.log("done 5");
+// route.use("/payment", payment_route);
+router.use("booking", booking_route);
+console.log("done 6");
 
-route.use("/resources",getHouse_route)
-route.use("/details/",getHouseDetail_route)
-route.use("/upload/",upload_route)
-route.use("/updateview",updataView_route)
-route.use("/signup",signup_route)
-route.use("/login",login_route)
-route.use("/getfeedback",get_feeback_route)
-route.use("/postfeedback",post_feedback_route)
-route.use("verify",verify_route)
-
-module.exports = route
-    
+module.exports = router;

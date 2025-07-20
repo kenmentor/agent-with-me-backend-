@@ -12,8 +12,8 @@ const express = require("express");
 const multer = require("multer");
 const { v2: cloudinary } = require("cloudinary");
 const router = express.Router();
-const Resource = require("../../modules/resource");
-const connectDB = require("../../utility/connectDb");
+const Resource = require("./modules/resource");
+const connectDB = require("./utility/connectDb");
 
 // Configure Cloudinary using your environment variables
 cloudinary.config({

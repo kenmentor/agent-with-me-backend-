@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
 
-const feedback = new mongoose.Schema({
-  feedback:{type:String}
-});
+const feedback = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    message: { type: String },
+  },
+  { timestamps: true }
+);
 
 // Add indexes for fast queries
 
