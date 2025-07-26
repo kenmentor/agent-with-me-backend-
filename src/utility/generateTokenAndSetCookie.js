@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 module.exports  = (userId,res) =>{
+      
 jwt_api_key = process.env.JWT_API_KEY
 const token = jwt.sign({userId},jwt_api_key,{expiresIn:"30d"})
  res.cookie("token",token,{

@@ -52,6 +52,9 @@ async function upload_house(files, body, user) {
   await connectDB();
 
   try {
+    console.log(files,"files")
+    console.log(body,"body")
+
     const uploadBufferToCloudinary = (fileBuffer, folder = "default") => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(

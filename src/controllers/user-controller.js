@@ -49,16 +49,16 @@ async function login_user(req, res) {
   const email = body.email;
   const api_key = process.env.JWT_API_KEY;
   const password = body.password;
-  console.log("process have  starting loging  ");
+  console.log("process have  starting   ",email,assword);
   try {
     const data = verification_service.login_user(password, email, api_key);
     const responseData = response.goodResponse;
     responseData.data = data;
-    res.json(responseData);
+    return res.json(responseData);
   } catch (erro) {
     const responseData = response.badResponse;
     responseData.erro = erro;
-    res.json(responseData);
+    return res.json(responseData);
   }
 }
 

@@ -1,6 +1,6 @@
 const { verification_repository } = require("../repositories");
 const { userDB } = require("../modules");
-const { response } = require("../utility");
+const { response,generateVerificationCode,generateTokenAndSetCookie } = require("../utility");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const saltround = 10;
@@ -36,13 +36,17 @@ async function login_user(password, email) {
   try {
     console.log("process have  started before bcryt  ");
     const hashedPassword = await bcrypt.hash(password, saltround);
+
+        console.log(bcrypt)
+
     console.log("process have  after bcryt  ");
     const user = await verificationRepo.findOne({
       email: email,
-      verifiedEmail: true,
+      // verifiedEmail: true,
     });
+
     console.log(user);
-    const isvalidpassword = await bcrypt.compare(hashedPassword, password);
+    const isvalidpassword = await bcrypt.compare(password,user.password);
     console.log(isvalidpassword);
 
     if ((user & isvalidpassword, isvalidpassword)) {
@@ -51,7 +55,7 @@ async function login_user(password, email) {
           email: email,
           Password: hashedPassword,
         },
-        api_key,
+        jwt_api_key,
         { expiresIn: "30d" }
       );
 
@@ -68,14 +72,17 @@ async function login_user(password, email) {
 
 async function signup_user(dataObject, res) {
   try {
-    const verificationCode = generateVerificationCode();
-    const alreadyExist = await verificationRepo.find({
+
+    const alreadyExist = await verificationRepo.findOne({
       email: dataObject.email,
     });
-    // if(alreadyExist){
-    //     response.badResponse.message = "this email have already been created "
-    //      return response.data = alreadyExist
-    // }
+    console.log(alreadyExist)
+
+    if(alreadyExist){
+        response.badResponse.message = "this email have already been created "
+         return response.data = alreadyExist
+    }
+    
     const hashedPassword = await bcrypt.hash(dataObject.password, saltround);
     const verifyToken = await generateVerificationCode();
 
@@ -85,13 +92,18 @@ async function signup_user(dataObject, res) {
       verifyToken: verifyToken,
       verificationTokenExpireAt: Date.now() + 24 * 60 * 60 * 1000, //24hr
     });
-    mailer.sendVerificationEmail(eamil, verifyToken);
+    console.log(data)
+
+  
+    // mailer.sendVerificationEmail(eamil, verifyToken);
     return generateTokenAndSetCookie(data._id.toString(), res);
+   
   } catch (err) {
-    console.log("erro creating user -service");
+    console.log("erro creating user -complete-verification");
     throw err;
   }
 }
+
 module.exports = {
   verif_NIN: verif_NIN,
   verify_phonenumber: verify_phonenumber,

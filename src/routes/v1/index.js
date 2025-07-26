@@ -9,6 +9,7 @@ const payment_route = require("./payment-route");
 const auth_route = require("./authentication-route");
 const feedback_route = require("./feedback-route");
 const booking_route = require("./booking-route");
+const request_route = require("./request-route")
 
 router.use("/house", house_route);
 console.log("done 1");
@@ -22,7 +23,8 @@ console.log("done 4");
 // router.use("/admin-pannel", admin_pannel_route);
 console.log("done 5");
 // route.use("/payment", payment_route);
-router.use("booking", booking_route);
+router.use("/booking", booking_route);
 console.log("done 6");
+router.use("/request", request_route)
 
 module.exports = router;

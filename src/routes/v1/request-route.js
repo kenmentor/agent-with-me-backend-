@@ -7,7 +7,7 @@ const { request_middleware } = require("../../middle-ware");
 //crete a request
 router.post(
   "/:id",
-  request_middleware.request_create,
+  request_middleware.booking_create,
   request_controller.create_request
 );
 //host://v1/request/requestId
@@ -16,4 +16,8 @@ router.get("/:id", request_controller.get_request_details);
 //host://v1/request/houseId
 // getting all request with the guest id
 router.get("/", request_controller.get_all_request);
+////
+router.delete("/", request_controller.delete_request);
+///////////
+router.put("/", request_controller.update_request);
 module.exports = router;

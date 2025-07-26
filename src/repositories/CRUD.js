@@ -10,8 +10,10 @@ class crudRepositoryExtra {
 
   async updateAny(object) {
     try {
+      this.module
       const verifiedUser = await this.module.findOneUpdate(object);
       return verifiedUser;
+
     } catch (error) {
       console.error("Error fetching data from DB:", error);
     }

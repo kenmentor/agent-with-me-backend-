@@ -1,22 +1,23 @@
+const { response } = require("../utility")
 function booking_create(req, res, next) {
   const { body } = req;
-  if (!body.hsotId) {
+  if (!body.hostId) {
     const badResponse = response.badResponse;
-    badResponse.message = "hsotId is required ";
+    badResponse.message = "hostId is required ";
     badResponse.status = 500;
-    res.json(badResponse);
+    return res.json(badResponse);
   }
   if (!body.guestId) {
     const badResponse = response.badResponse;
     badResponse.message = "guestId is required ";
     badResponse.status = 500;
-    res.json(badResponse);
+    return res.json(badResponse);
   }
   if (!body.houseId) {
     const badResponse = response.badResponse;
     badResponse.message = "houseId is required ";
     badResponse.status = 500;
-    res.json(badResponse);
+    return res.json(badResponse);
   }
 
   next();

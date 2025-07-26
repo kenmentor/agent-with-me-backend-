@@ -10,10 +10,10 @@ router.post(
   booking_middleware.booking_create,
   booking_controller.create_booking
 );
-//host://v1/booking/bookingId
+//host://v1/booking/booking/Id
 // geting booking details
-router.get("/:id", booking_controller.get_booking_details);
+router.get("/:guestId/:bookingId", booking_controller.get_booking_details);
 //host://v1/booking/houseId
 // getting all booking with the guest id
-router.get("/", booking_controller.get_all_booking);
+router.get("/:guestId", booking_controller.get_all_booking);
 module.exports = router;
