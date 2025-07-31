@@ -11,6 +11,7 @@ const resourceSchema = new mongoose.Schema(
     description: { type: String, required: true },
     state: { type: String, required: true },
     address: { type: String, required: true },
+    maxgeust: { type: Number, default: 1 },
     price: { type: Number, required: true },
     waterSuply: { type: Boolean, required: true },
     electricity: { type: Number, required: true },

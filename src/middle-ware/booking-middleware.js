@@ -1,18 +1,11 @@
-const { response } = require("../utility")
+const { response, userCookieVerify } = require("../utility")
+
+// const {}
 function booking_create(req, res, next) {
   const { body } = req;
-  const token = req.headers.authorization?.spliit(" ")[1];
-  if (!token) {
-    const Response = response.badResponse;
-    res.json((Response.message = "TOKKEN is required "));
-  }
-  const decode = jwt.verify(token, process.env.JWT_API_KEY)
-  if (!decode) {
-    const Response = response.badResponse;
-    res.json((Response.message = "invalid token"));
-  }
-  req.user = decode;
 
+
+  userCookieVerify(req, res)
   if (!body.hostId) {
     const badResponse = response.badResponse;
     badResponse.message = "hostId is required ";
@@ -52,6 +45,11 @@ function booking_create(req, res, next) {
 
   next();
 }
+function CookieValidity(req, res, next) {
+  userCookieVerify(req, res)
+  next()
+}
 module.exports = {
   booking_create: booking_create,
+  CookieValidity: CookieValidity
 };

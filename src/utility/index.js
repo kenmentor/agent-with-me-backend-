@@ -5,4 +5,5 @@ module.exports = {
   response: require("./response"),
   generateVerificationCode: require("./generateVerificationCode"),
   generateTokenAndSetCookie: require("./generateTokenAndSetCookie"),
+  userCookieVerify:require("./userCookieVerify")
 };

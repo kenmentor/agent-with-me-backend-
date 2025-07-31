@@ -1,8 +1,10 @@
-const { response } = require("../utility");
+const { response, userCookieVerify } = require("../utility");
 const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
 
 function user_update(req, res, next) {
+  userCookieVerify(req, req)
   const { body } = req;
   if (!body.phoneNumber) {
     const badResponse = response.badResponse;
@@ -21,6 +23,7 @@ function user_update(req, res, next) {
 }
 
 function user_create(req, res, next) {
+  // userCookieVerify(req, res)
   const { body } = req;
   if (!body.phoneNumber) {
     const badResponse = response.badResponse;
@@ -31,9 +34,9 @@ function user_create(req, res, next) {
   if (!body.email) {
     const badResponse = response.badResponse;
     badResponse.message = "email is required ";
-    badResponse.status = 500;
+    badResponse.status = 400;
 
-    return res.json(badResponse);
+    return res.json(badResponse).status(badResponse.status);
   }
   if (!body.password) {
     const badResponse = response.badResponse;
@@ -45,25 +48,24 @@ function user_create(req, res, next) {
 }
 
 function user_delete(req, res, next) {
-  const token = req.headers.authorization?.spliit(" ")[1];
-  if (!token) {
-    const Response = response.badResponse;
-    return res.json((Response.message = "TOKKEN is required "));
-  }
   try {
-    const decode = jwt.verify(token, process.env.JWT_API_KEY);
-    req.user = decode;
-    upload.fields([{ name: "files" }, { name: "thumbnail" }]);
+    userCookieVerify(req, req)
+
     next();
   } catch (error) {
     const Response = response.badResponse;
     return res.json((Response.message = "invalid token "));
   }
 }
+function CookieValidity(req, res, next) {
+  userCookieVerify(req, res)
+  next()
+}
 module.exports = {};
 
 module.exports = {
   user_update,
   user_delete,
-  user_create
+  user_create,
+  CookieValidity
 };

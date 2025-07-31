@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+
 const fuzzysort = require("fuzzysort");
 class crudRepositoryExtra {
   constructor(module) {
@@ -11,7 +11,7 @@ class crudRepositoryExtra {
   async updateAny(object) {
     try {
       this.module
-      const verifiedUser = await this.module.findOneUpdate(object);
+      const verifiedUser = await this.module.findOneAndUpdate(object);
       return verifiedUser;
 
     } catch (error) {
@@ -86,5 +86,9 @@ class crudRepositoryExtra {
       throw err;
     }
   }
+  async findOne(object) {
+    return await this.module.findOne(object)
+  }
+
 }
 module.exports = crudRepositoryExtra;

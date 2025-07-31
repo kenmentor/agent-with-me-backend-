@@ -12,6 +12,11 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    amount: {
+      type: Number,
+      require: true,
+      default: 0.000
+    },
     house: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Resource",
@@ -19,7 +24,7 @@ const bookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      required: true,
+
       defualt: "pending",
     },
     paymentId: {

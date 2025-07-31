@@ -17,6 +17,11 @@ const paymentSchema = new mongoose.Schema(
       ref: "Resource",
       required: true,
     },
+    amount: {
+      type: Number,
+      require: true,
+      default: 0.000
+    },
     status: {
       type: String,
       required: true,

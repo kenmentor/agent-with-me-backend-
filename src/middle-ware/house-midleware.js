@@ -1,30 +1,29 @@
-const { response } = require("../utility");
+const { response, userCookieVerify } = require("../utility");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
+const { goodResponse } = require("../utility/response");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 require("dotenv").config();
 
 function house_upload(req, res, next) {
-  const token = req.headers.authorization?.spliit(" ")[1];
-  if (!token) {
-    const Response = response.badResponse;
-    res.json((Response.message = "TOKKEN is required "));
-  }
+  userCookieVerify(req, res)
   try {
-   if (!jwt.verify(token, process.env.JWT_API_KEY)) {
-        const Response = response.badResponse;
-        retres.json((Response.message = "invalid token"));
-      }
-    req.user = decode;
+
     upload.fields([{ name: "files" }, { name: "thumbnail" }]);
     next();
   } catch (error) {
-   
-    next();
+    goodResponse.message = error.message
+    console.log(error)
+    return res.json(goodResponse);
+
   }
+} function CookieValidity(req, res, next) {
+  userCookieVerify(req, res)
+  next()
 }
 module.exports = {
   house_upload,
+  CookieValidity
 };

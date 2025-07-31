@@ -10,65 +10,70 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  password:{
+  password: {
     type: String,
-    required:true
+    required: true
   },
-  phoneNumber : {
-     type:Number,
-     required: true,
+  userName: {
+    type: String,
+    require: true
   },
-  dateOfBirth:{
-    type:Date,
+  phoneNumber: {
+    type: Number,
+    required: true,
   },
-  NIN:{
-    type:Number
+  dateOfBirth: {
+    type: Date,
   },
-  lastLogin:{
-    type:Date,
-    default:Date.now
+  NIN: {
+    type: Number
   },
-  
-  verifiedEmail:{
-    type:Boolean,
-    default:false
-  }, 
-  verifiedNIN:{
-    type:Boolean,
-    default:false
+  lastLogin: {
+    type: Date,
+    default: Date.now
   },
-  adminVerified:{
-    type:Boolean,
-    default:false
-  },
-  role:{
-  type:String,
-  default:"USER"
-  },
-  rank:{
-    type:Number,
-    default:1
-  },
-  verificationCompleted:{
-    type:Boolean,
-    default:false,
-  },
-  socialMedai:{
-    type:[String],
-  },
-  profileImage:{
-    type:String
-  },
- 
-  verifyToken:String,
-  forgottonPasswordToken:String,
-  forgottonPasswordTokenExpireAt:Date,
-  verificationToken:String,
-  verificationTokenExpireAt:Date,
 
-},{timestamps:true});
+  verifiedEmail: {
+    type: Boolean,
+    default: false
+  },
+  verifiedNIN: {
+    type: Boolean,
+    default: false
+  },
+  adminVerified: {
+    type: Boolean,
+    default: false
+  },
+
+  role: {
+    type: String,
+    default: "USER"
+  },
+  rank: {
+    type: Number,
+    default: 1
+  },
+  verificationCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  socialMedai: {
+    type: [String],
+  },
+  profileImage: {
+    type: String
+  },
+
+
+  forgottonPasswordToken: String,
+  forgottonPasswordTokenExpireAt: Date,
+  verifyToken: String,
+  verificationTokenExpireAt: Date,
+
+}, { timestamps: true });
 
 // Create a model
- 
 
-module.exports = mongoose.model("user",userSchema)
+
+module.exports = mongoose.model("user", userSchema)

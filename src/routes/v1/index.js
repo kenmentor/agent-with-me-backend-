@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const admin_pannel_route = require("./admin-panel-route");
-const user_pannel_route = require("./user-panel-route");
+const user_route = require("./user-route");
 const complete_verification_route = require("./complete-verification");
 const house_route = require("./house-route");
 const payment_route = require("./payment-route");
@@ -26,5 +26,6 @@ console.log("done 5");
 router.use("/booking", booking_route);
 console.log("done 6");
 router.use("/request", request_route)
+router.use("/user", user_route)
 
 module.exports = router;

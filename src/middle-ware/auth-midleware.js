@@ -7,25 +7,39 @@ const upload = multer({ storage });
 require("dotenv").config();
 
 function signup(req, res, next) {
-  const token = req.headers.authorization?.spliit(" ")[1];
-  if (!token) {
-    const Response = response.badResponse;
-    res.json((Response.message = "TOKKEN is required "));
+  const body = req.body
+  if (!body.email) {
+    const badResponse = response.badResponse;
+    badResponse.message = "email is required ";
+    badResponse.status = 500;
+    return res.json(badResponse);
   }
-  try {
-    const decode = jwt.verify(token, process.env.JWT_API_KEY)
-    if (!decode) {
-      const Response = response.badResponse;
-      res.json((Response.message = "invalid token"));
-    }
-    req.user = decode;
-    upload.fields([{ name: "files" }, { name: "thumbnail" }]);
-    next();
-  } catch (error) {
-
-    next();
+  if (!body.password) {
+    const badResponse = response.badResponse;
+    badResponse.message = "password is required ";
+    badResponse.status = 500;
+    return res.json(badResponse);
   }
+  next();
+}
+function login(req, res, next) {
+  const body = req.body
+  if (!body.email) {
+    const badResponse = response.badResponse;
+    badResponse.message = "email is required ";
+    badResponse.status = 500;
+    return res.json(badResponse);
+  }
+  if (!body.password) {
+    const badResponse = response.badResponse;
+    badResponse.message = "password is required ";
+    badResponse.status = 500;
+    return res.json(badResponse);
+  }
+  next();
 }
 module.exports = {
-  house_upload,
+
+  signup,
+  login
 };

@@ -1,6 +1,7 @@
 const { verification_repository } = require("../repositories");
 const { userDB } = require("../modules");
-const { response,generateVerificationCode,generateTokenAndSetCookie } = require("../utility");
+const { response, generateVerificationCode, generateTokenAndSetCookie } = require("../utility");
+const {email} = require("../utility/")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const saltround = 10;
@@ -31,13 +32,37 @@ async function verif_NIN(NIN, userId) {
   }
 }
 
-function verify_phonenumber(phone) {}
+async function verify_email(code) {
+  console.log(code)
+  try {
+    const user = await verificationRepo.findOne({
+      verifyToken: code,
+      verificationTokenExpireAt: { $gt: Date.now() }
+    })
+    console.log(user)
+    if (user) {
+      user.verifiedEmail = true
+      user.verifyToken = undefined
+      user.verificationTokenExpireAt = undefined
+      await user.save();
+      // await emails.send_welcome_email(user.email, user.username)
+
+
+    }
+    console.log(user)
+    return user
+  } catch (error) {
+    console.log("error occured in service verification ")
+    throw error
+  }
+}
+
 async function login_user(password, email) {
   try {
     console.log("process have  started before bcryt  ");
     const hashedPassword = await bcrypt.hash(password, saltround);
 
-        console.log(bcrypt)
+
 
     console.log("process have  after bcryt  ");
     const user = await verificationRepo.findOne({
@@ -45,8 +70,8 @@ async function login_user(password, email) {
       // verifiedEmail: true,
     });
 
-    console.log(user);
-    const isvalidpassword = await bcrypt.compare(password,user.password);
+
+    const isvalidpassword = await bcrypt.compare(password, user.password);
     console.log(isvalidpassword);
 
     if ((user & isvalidpassword, isvalidpassword)) {
@@ -60,7 +85,7 @@ async function login_user(password, email) {
       );
 
       console.log("coming from the login", jwtToken);
-      return { token: jwtToken };
+      return { token: jwtToken, user: user };
     }
     // throw { message: "user not found " };
     // return null;
@@ -72,17 +97,6 @@ async function login_user(password, email) {
 
 async function signup_user(dataObject, res) {
   try {
-
-    const alreadyExist = await verificationRepo.findOne({
-      email: dataObject.email,
-    });
-    console.log(alreadyExist)
-
-    if(alreadyExist){
-        response.badResponse.message = "this email have already been created "
-         return response.data = alreadyExist
-    }
-    
     const hashedPassword = await bcrypt.hash(dataObject.password, saltround);
     const verifyToken = await generateVerificationCode();
 
@@ -94,10 +108,10 @@ async function signup_user(dataObject, res) {
     });
     console.log(data)
 
-  
+
     // mailer.sendVerificationEmail(eamil, verifyToken);
-    return generateTokenAndSetCookie(data._id.toString(), res);
-   
+    return data
+
   } catch (err) {
     console.log("erro creating user -complete-verification");
     throw err;
@@ -106,7 +120,8 @@ async function signup_user(dataObject, res) {
 
 module.exports = {
   verif_NIN: verif_NIN,
-  verify_phonenumber: verify_phonenumber,
+  verify_email: verify_email,
   signup_user: signup_user,
   login_user: login_user,
+
 };
