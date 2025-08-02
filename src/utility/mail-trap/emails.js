@@ -1,18 +1,17 @@
 const { client, sender } = require("./mailTrapConfig")
 const { verificationEmail, welcomeEmail, forgetPasswordEmail } = require("./emailTemplate")
-const { MailtrapClient } = require("mailtrap")
+const { } = require("nodemailer")
 function sendVerificationEmail(email, verificationToken) {
-    const recipent = [{ email }]
+
 
     try {
-        const response = client
-            .send({
-                from: sender,
-                to: recipent,
-                subject: "verify your email address",
-                html: verificationEmail,
-                category: "Email Verification"
-            })
+        const response = client.sendMail({
+            from: sender,
+            to: email,
+            subject: "verify your email address",
+            html: verificationEmail.replace("[verificationcode]", verificationToken),
+            category: "Email Verification"
+        })
         return response
     }
     catch (err) {
@@ -20,11 +19,11 @@ function sendVerificationEmail(email, verificationToken) {
     }
 }
 async function send_welcome_email(email, username) {
-    const recipent = [{ email }]
+
     try {
-        const response = await MailtrapClient.send({
+        const response = await client.sendMail({
             from: sender,
-            to: recipent,
+            to: email,
             template_uuid: "some string from mailtrap",
             template_variables: {
                 company_info_name: "agent-with-me",
@@ -39,11 +38,11 @@ async function send_welcome_email(email, username) {
 }
 
 async function sendPasswordResetEmail(email, resetURL) {
-    const recipent = [{ email }];
+
     try {
-        const response = await MailtrapClient.send({
+        const response = await client.sendMail({
             from: sender,
-            to: recipent,
+            to: email,
             subject: "Reset your password ",
             html: forgetPasswordEmail.replace("{resetURL}", resetURL)
         })
@@ -55,7 +54,7 @@ async function sendPasswordResetEmail(email, resetURL) {
 async function sendResetpasswordSuccessEmail(email) {
     const recipent = [{ email }];
     try {
-        const response = await MailtrapClient.send({
+        const response = await client.sendMail({
             from: sender,
             to: recipent,
             subject: "Password Reset succesful ",

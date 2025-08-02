@@ -46,8 +46,9 @@ function booking_create(req, res, next) {
   next();
 }
 function CookieValidity(req, res, next) {
-  userCookieVerify(req, res)
-  next()
+  const value = userCookieVerify(req, res)
+
+  if (value) { next() }
 }
 module.exports = {
   booking_create: booking_create,

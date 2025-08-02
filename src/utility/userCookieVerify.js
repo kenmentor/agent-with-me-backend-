@@ -5,22 +5,23 @@ module.exports = (req, res) => {
 
     const { badResponse } = response
     try {
-
-
         console.log(req.cookies, "helloeoeoeo")
         const token = req.cookies.token
-
         if (!token) {
-
+            console.log("decodingggggg 1")
+            console.log(token)
             badResponse.message = "TOKKEN is required "
-            res.json(badResponse);
+            return res.json(badResponse);
         }
-        const decode = jwt.verify(token?.split(" ")[0], process.env.JWT_API_KEY)
+        console.log("decodingggggg 4")
+        const decode = jwt.verify(token, process.env.JWT_API_KEY)
         if (!decode) {
+            console.log("decodingggggg 3")
             badResponse.message = "invalid token"
-            res.json(badResponse);
+            return res.json(badResponse);
         }
-        return req.user = decode;
+        console.log("decodingggggg 5")
+        return decode;
     }
     catch (error) {
         badResponse.message = error.message

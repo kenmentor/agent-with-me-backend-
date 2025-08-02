@@ -14,15 +14,15 @@ async function verify_email(req, res) {
         if (!data) {
 
             badResponse.message = "invalid or expired verification code "
-            return res.json(badResponse)
+            return res.status(badResponse.status).json(badResponse)
         }
         goodResponse.data = data
         goodResponse.message = "email verification succesfull"
-        return res.json(goodResponse)
+        return res.status(goodResponse.status).json(goodResponse)
 
     } catch (error) {
         badResponse.message = error.message
-        return res.json(badResponse)
+        return res.status(badResponse.status).json(badResponse)
     }
 }
 module.exports = { verify_NIN, verify_user, verify_phonenumber, verify_email };

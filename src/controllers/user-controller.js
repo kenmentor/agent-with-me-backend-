@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const { generateTokenAndSetCookie } = require("../utility");
 const bcrypt = require("bcryptjs/dist/bcrypt");
+const { sendVerificationEmail } = require("../utility/mail-trap/emails");
 
 async function get_user(req, res) {
   const reqObject = req.body
@@ -33,12 +34,12 @@ async function edit_user_detail(req, res) {
     const responseData = response.goodResponse;
     responseData.message = "usefully edited your profil ";
     responseData.data = data;
-    res.json(responseData);
+    return res.json(responseData);
 
   } catch (err) {
     const responseData = response.badResponse;
     responseData.message = `something went wrong ${err}`;
-    res.json();
+    return res.json();
   }
 }
 function logout_user(req, res) {
@@ -58,9 +59,20 @@ async function login_user(req, res) {
     const data = await verification_service.login_user(password, email, api_key);
     const responseData = response.goodResponse;
     responseData.data = data;
-    generateTokenAndSetCookie(res, data._id)
-    return res.json(responseData);
+    if (data) {
+      generateTokenAndSetCookie(res, data._id)
+      console.log(data, "1")
+
+      const responseData = response.goodResponse;
+      responseData.message = "user succefully logged"
+      return res.status(responseData.status).json(responseData);
+    }
+    const resp = response.badResponse;
+    resp.message = "user not found or not verified"
+    return res.status(resp.status).json(resp);
+
   } catch (erro) {
+
     const responseData = response.badResponse;
     responseData.erro = erro;
     responseData.message = erro.messages
@@ -85,7 +97,7 @@ async function signup_user(req, res) {
   /////CHECK IF USER EXIST 
   const alreadyExist = await user_service.find_user({
     email: email,
-    // verifiedEmail: false
+    verifiedEmail: false
 
   });
 
@@ -93,7 +105,7 @@ async function signup_user(req, res) {
     response.badResponse.message = "this email have been used  "
 
     response.badResponse.status = 501
-    return res.json(response.badResponse).status(response.badResponse.status)
+    return res.status(response.badResponse.status).json(response.badResponse)
   }
   if (email && password && role && phoneNumber && dateOfBirth) {
 
@@ -101,15 +113,15 @@ async function signup_user(req, res) {
       { email, password, email, password, role, phoneNumber, dateOfBirth }
     );
 
-    generateTokenAndSetCookie(res, data._id.toString());
+    // generateTokenAndSetCookie(res, data._id.toString());
 
 
     const { goodResponse } = response;
 
 
-    return res.json((goodResponse.data = data));
+    return res.status(goodResponse.status).json((goodResponse.data = data));
   }
-  return res.json((response.badResponse.message = "all input is required"));
+  return resres.status(goodResponse.status).json((response.badResponse.message = "all input is required"));
 }
 // async function verify_user(req, res) {
 //   const { verificationCode } = req.body;
@@ -140,7 +152,7 @@ async function find_users(req, res) {
 
   try {
     const data = await user_service.find_users({
-     
+
       minAge: parseInt(minAge),
       maxAge: parseInt(maxAge),
       rule: rule,

@@ -1,18 +1,18 @@
-const mailtrap = require("mailtrap")
+const { createTransport, } = require("nodemailer")
+const service = require("../../service")
 require("dotenv").config()
-const TOKEN = process.env.MAILTRAP_TOKEN
-const ENDPOINT = process.env.MAILTRAP_ENDPOIN
+const EMAIL_PASS = process.env.EMAIL_PASS
+const EMAIL = process.env.EMAIL
 
 
-const client = new mailtrap({endpoint:ENDPOINT,token:TOKEN})
-const sender = {
-    email:"davidnwachukwum@gmail.com",
-    name:"agent with me "
-}
-client.send({
-    from:sender
+const client = createTransport({
+    service: "gmail",
+    auth: { user: EMAIL, pass: EMAIL_PASS }
 })
-module.exports =  {
-    client:client ,
-    sender:sender
+const sender = EMAIL
+
+module.exports = {
+    sender: sender,
+    client: client,
+
 }

@@ -1,9 +1,10 @@
 const { verification_repository } = require("../repositories");
 const { userDB } = require("../modules");
 const { response, generateVerificationCode, generateTokenAndSetCookie } = require("../utility");
-const {email} = require("../utility/")
+const { email } = require("../utility/")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { sendVerificationEmail, send_welcome_email } = require("../utility/mail-trap/emails");
 const saltround = 10;
 const jwt_api_key = process.env.JWT_API_KEY;
 const verificationRepo = new verification_repository(userDB);
@@ -45,7 +46,7 @@ async function verify_email(code) {
       user.verifyToken = undefined
       user.verificationTokenExpireAt = undefined
       await user.save();
-      // await emails.send_welcome_email(user.email, user.username)
+      await send_welcome_email(user.email, user.username)
 
 
     }
@@ -67,31 +68,35 @@ async function login_user(password, email) {
     console.log("process have  after bcryt  ");
     const user = await verificationRepo.findOne({
       email: email,
-      // verifiedEmail: true,
+      verifiedEmail: true,
     });
+    if (user) {
+      console.log(user, "11")
 
+      const isvalidpassword = await bcrypt.compare(password, user.password);
+      console.log(isvalidpassword);
 
-    const isvalidpassword = await bcrypt.compare(password, user.password);
-    console.log(isvalidpassword);
+      if ((user & isvalidpassword, isvalidpassword)) {
+        const jwtToken = jwt.sign(
+          {
+            email: email,
+            Password: hashedPassword,
+          },
+          jwt_api_key,
+          { expiresIn: "30d" }
+        );
 
-    if ((user & isvalidpassword, isvalidpassword)) {
-      const jwtToken = jwt.sign(
-        {
-          email: email,
-          Password: hashedPassword,
-        },
-        jwt_api_key,
-        { expiresIn: "30d" }
-      );
-
-      console.log("coming from the login", jwtToken);
-      return { token: jwtToken, user: user };
+        console.log("coming from the login", jwtToken);
+        return user;
+      }
     }
-    // throw { message: "user not found " };
-    // return null;
+
+    return null;
   } catch (err) {
     console.log("error logining -service");
-    throw err;
+    console.log(err)
+    throw err
+
   }
 }
 
@@ -99,17 +104,17 @@ async function signup_user(dataObject, res) {
   try {
     const hashedPassword = await bcrypt.hash(dataObject.password, saltround);
     const verifyToken = await generateVerificationCode();
-
     const data = await verificationRepo.create({
       ...dataObject,
       password: hashedPassword,
       verifyToken: verifyToken,
-      verificationTokenExpireAt: Date.now() + 24 * 60 * 60 * 1000, //24hr
+      verificationTokenExpireAt: Date.now() + 24 * 60 * 60 * 1000 //24hr
     });
-    console.log(data)
+
+    const resp = await sendVerificationEmail(data.email, data.verifyToken)
+    console.log(resp, "emaoling  ooooooo")
 
 
-    // mailer.sendVerificationEmail(eamil, verifyToken);
     return data
 
   } catch (err) {

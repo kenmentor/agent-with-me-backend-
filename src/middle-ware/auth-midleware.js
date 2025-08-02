@@ -11,35 +11,41 @@ function signup(req, res, next) {
   if (!body.email) {
     const badResponse = response.badResponse;
     badResponse.message = "email is required ";
-    badResponse.status = 500;
+    badResponse.status = 400;
     return res.json(badResponse);
   }
   if (!body.password) {
     const badResponse = response.badResponse;
     badResponse.message = "password is required ";
-    badResponse.status = 500;
+    badResponse.status = 400;
     return res.json(badResponse);
   }
   next();
 }
-function login(req, res, next) {
-  const body = req.body
+function login_user(req, res, next) {
+  // userCookieVerify(req, res)
+  const { body } = req;
+
   if (!body.email) {
     const badResponse = response.badResponse;
     badResponse.message = "email is required ";
-    badResponse.status = 500;
-    return res.json(badResponse);
+    badResponse.status = 400;
+    console.log(1, body)
+    return res.status(400).json(badResponse)
   }
+  console.log(2, body)
   if (!body.password) {
     const badResponse = response.badResponse;
-    badResponse.message = "password is required ";
-    badResponse.status = 500;
-    return res.json(badResponse);
+    badResponse.message = "phoneNumber is required ";
+    badResponse.status = 400;
+    console.log(3, body)
+    return res.status(400).json(badResponse);
   }
+  console.log(4, body)
   next();
 }
 module.exports = {
 
   signup,
-  login
+  login_user
 };
