@@ -39,7 +39,7 @@ async function edit_user_details(id, object) {
   return data;
 }
 async function get_user(id) {
-  const data = await userRepo.findById(Object(id))
+  const data = await userRepo.findById(id)
   return data
 }
 async function find_users(object) {

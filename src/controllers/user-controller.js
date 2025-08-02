@@ -1,25 +1,42 @@
 const { response, mailer } = require("../utility");
 const { user_service, verification_service } = require("../service");
 require("dotenv").config();
+const mongoose = require("mongoose")
 
 const { generateTokenAndSetCookie } = require("../utility");
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const { sendVerificationEmail } = require("../utility/mail-trap/emails");
 
 async function get_user(req, res) {
-  const reqObject = req.body
+  const id = req.params.id;
+
   try {
-    const data = await user_service.get_user(reqObject.params.id);
+    // Validate MongoDB ObjectId
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    // Fetch user from DB using your service
+    const data = await user_service.get_user(id);
+
+    if (!data) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const { goodResponse } = response;
     goodResponse.data = data;
-    return res.json(goodResponse).status(200);
+
+    return res.status(200).json(goodResponse);
   } catch (error) {
     const { badResponse } = response;
-    badResponse.message = error.message
+    badResponse.message = error.message;
     console.error("Error fetching data from DB:", error);
+
     return res.status(500).json(badResponse);
   }
 }
+
 
 async function edit_user_detail(req, res) {
   try {

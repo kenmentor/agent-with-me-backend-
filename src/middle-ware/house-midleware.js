@@ -7,19 +7,39 @@ const upload = multer({ storage });
 
 require("dotenv").config();
 
+
+
+
+
 function house_upload(req, res, next) {
-  userCookieVerify(req, res)
-  try {
+  // Run multer manually here
+  upload.fields([
+    { name: "files" },
+    { name: "thumbnail" }
+  ])(req, res, function (err) {
+    if (err) {
+      console.log("Multer error:", err);
+      goodResponse.message = err.message;
+      return res.status(400).json(goodResponse);
+    }
 
-    upload.fields([{ name: "files" }, { name: "thumbnail" }]);
-    next();
-  } catch (error) {
-    goodResponse.message = error.message
-    console.log(error)
-    return res.json(goodResponse);
+    // After multer success, now verify user
+    try {
+      const { userCookieVerify } = require("../utility");
+      userCookieVerify(req, res);
 
-  }
-} function CookieValidity(req, res, next) {
+      next();
+    } catch (error) {
+      console.error("Verification Error:", error);
+      goodResponse.message = error.message;
+      return res.status(401).json(goodResponse);
+    }
+  });
+}
+
+module.exports = house_upload;
+
+function CookieValidity(req, res, next) {
   userCookieVerify(req, res)
   next()
 }

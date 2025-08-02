@@ -1,24 +1,31 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
+
+const route = require("./routes");
+
 const app = express();
-require("dotenv").config()
-const route = require("./routes")
-// Middleware for parsing JSON
-app.use(express.json({ limit: '50mb' }));
+
+// ✅ CORS and cookies first
 app.use(
   cors({
-    origin: " http://localhost:3000",
+    origin: "http://localhost:3000", // remove space before http
     credentials: true
   })
 );
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use("/", route)
+// ✅ Register routes BEFORE json parser
+app.use("/", route);
 
-PORT = process.env.PORT
+// ✅ Only apply json parser AFTER file upload routes
+app.use(express.json({ limit: '50mb' }));
 
-// Start Server
-app.listen(PORT || 5036, () => {
+// ✅ Optional: apply urlencoded after json if needed
+// app.use(express.urlencoded({ extended: true }));
+
+const PORT = process.env.PORT || 5036;
+app.listen(PORT, () => {
   console.log(`Express server running on http://localhost:${PORT}`);
 });

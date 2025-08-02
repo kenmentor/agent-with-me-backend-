@@ -1,5 +1,4 @@
-
-const fuzzysort = require("fuzzysort");
+const mongoose = require("mongoose");
 class crudRepositoryExtra {
   constructor(module) {
     this.module = module;
@@ -47,15 +46,19 @@ class crudRepositoryExtra {
   }
 
   async findById(id) {
-    console.log("get-details-crud ");
+    console.log(id);
 
-    if (!mongoose.Types.findByIdObjectId.isValid(id)) {
-      throw new Error("id is not valid ");
+
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error("ID is not valid");
     }
 
+    console.log(id,'one');
     try {
       const data = await this.module.findById(id);
-
+      console.log(id,'two');
+      console.log(data);
       if (!data) {
         throw new Error("Resource not found");
       }
