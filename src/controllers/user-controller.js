@@ -138,7 +138,8 @@ async function signup_user(req, res) {
 
     return res.status(goodResponse.status).json((goodResponse.data = data));
   }
-  return resres.status(goodResponse.status).json((response.badResponse.message = "all input is required"));
+  const { goodResponse } = response
+  return res.status(goodResponse.status).json((response.badResponse.message = "all input is required"));
 }
 // async function verify_user(req, res) {
 //   const { verificationCode } = req.body;

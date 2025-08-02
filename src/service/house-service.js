@@ -35,81 +35,67 @@ async function update_house_view(id) {
   }
 }
 
+// const cloudinary = require("cloudinary").v2;
+// const crudRepositoryExtra = require("../utils/crudRepositoryExtra");
+// const resourceDB = require("../models/resource");
+// const connectDB = require("../config/db");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 async function upload_house(files, body, user) {
-  console.log("Cloudinary Config:", {
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET ? "***" : null, // Hide secret in log
-  });
-
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-  });
-
-  console.log(body);
   await connectDB();
+  console.log("UPLOAD SERVICE ")
+  console.log(files)
+  console.log(body)
+  const uploadBufferToCloudinary = (fileBuffer, folder = "default") => {
 
-  try {
-    console.log(files,"files")
-    console.log(body,"body")
-
-    const uploadBufferToCloudinary = (fileBuffer, folder = "default") => {
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder, resource_type: "auto" },
-          (error, result) => {
-            if (result) {
-              resolve(result);
-            } else {
-              reject(error);
-            }
-          }
-        );
-        stream.end(fileBuffer);
-      });
-    };
-
-    // Upload Thumbnail
-    let thumbnailUrl = "";
-    if (files.thumbnail && files.thumbnail.length > 0) {
-      const thumbnailUploadResult = await uploadBufferToCloudinary(
-        files.thumbnail[0].buffer,
-        "thumbnails"
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder, resource_type: "auto" },
+        (error, result) => {
+          if (result) resolve(result);
+          else reject(error);
+        }
       );
-      thumbnailUrl = thumbnailUploadResult.secure_url;
-    }
+      stream.end(fileBuffer);
+    });
+  };
 
-    // Upload Other Files
-    let gallery = [];
-    if (files.files && files.files.length > 0) {
-      gallery = await Promise.all(
-        files.files.map((file) =>
-          uploadBufferToCloudinary(file.buffer, "gallery").then((result) => ({
-            url: result.secure_url,
-            type: file.mimetype,
-          }))
-        )
-      );
-    }
-
-    // 🔴 **Fix: Attach `thumbnailUrl` to `body`**
-    body.thumbnail = thumbnailUrl;
-    body.gallery = gallery; // Also save resources in MongoDB
-
-    const newcrudRepositoryExtra = new crudRepositoryExtra(resourceDB);
-    const newBody = await body;
-    newBody.electricity = await Number(body.electricity);
-    newBody.price = await Number(body.price);
-    newBody.waterSuply = await Boolean(body.waterSuply);
-    const data = await newcrudRepositoryExtra.create(newBody); // Fix: Add await
-    return data;
-  } catch (error) {
-    console.error("Error handling upload:", error);
-    throw error;
+  let thumbnailUrl = "";
+  if (files.thumbnail?.length > 0) {
+    const result = await uploadBufferToCloudinary(files.thumbnail[0].buffer, "thumbnails");
+    thumbnailUrl = result.secure_url;
   }
+
+  let gallery = [];
+  if (files.files?.length > 0) {
+    gallery = await Promise.all(
+      files.files.map((file) =>
+        uploadBufferToCloudinary(file.buffer, "gallery").then((result) => ({
+          url: result.secure_url,
+          type: file.mimetype,
+        }))
+      )
+    );
+  }
+
+  body.thumbnail = thumbnailUrl;
+  body.gallery = gallery;
+  body.electricity = Number(body.electricity);
+  body.price = Number(body.price);
+  body.waterSuply = Boolean(body.waterSuply);
+
+  const repo = new crudRepositoryExtra(resourceDB);
+  const data = await repo.create(body);
+  return data;
 }
+
+
+
 
 module.exports = {
   find_house,
